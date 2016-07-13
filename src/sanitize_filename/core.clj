@@ -2,7 +2,7 @@
   (:require [clojure.string :as s]))
 
 (def CHARACTER_FILTER #"[\x00-\x1F\/\\:\*\?\"<>\|]")
-(def UNICODE_WHITESPACE #"\p{Space}")
+(def UNICODE_WHITESPACE #"\p{Space}+")
 (def WINDOWS_RESERVED_NAMES #{"CON" "PRN" "AUX" "NUL" "COM1" "COM2" "COM3" "COM4" "COM5"
                               "COM6" "COM7" "COM8" "COM9" "LPT1" "LPT2" "LPT3" "LPT4"
                               "LPT5" "LPT6" "LPT7" "LPT8" "LPT9"})
@@ -11,7 +11,7 @@
 (defn- normalize [filename]
   (-> filename
       s/trim
-      (s/replace UNICODE_WHITESPACE "")))
+      (s/replace UNICODE_WHITESPACE " ")))
 
 (defn- filter-windows-reserved-names [filename]
   (if (WINDOWS_RESERVED_NAMES (s/upper-case filename))
@@ -65,5 +65,5 @@
   )
 
 ;(defn -main []
-;  should print "ab我是c.zip"
+;  should print "ab 我是c.zip"
 ;  (println (sanitize "/a/b/  我是c.zip")))
