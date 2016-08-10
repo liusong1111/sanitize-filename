@@ -56,11 +56,10 @@
            (sut/sanitize "a\u001fb")))
     (is (= "file"
            (sut/sanitize "\u001f"))) ; due to str/trim
-    ;; (is (= "$" ; https://en.wikipedia.org/wiki/C0_and_C1_control_codes
-    ;;        (sut/sanitize "\u0080")))
-    ;; (is (= "$"
-    ;;        (sut/sanitize "\u009f")))
-    )
+    (is (= "$" ; https://en.wikipedia.org/wiki/C0_and_C1_control_codes
+           (sut/sanitize "\u0080")))
+    (is (= "$"
+           (sut/sanitize "\u009f"))))
 
   (testing "replaces whitespace"
     (is (= "ab"
@@ -81,16 +80,16 @@
            (sut/sanitize "\ta\n"))))
 
   (testing "extends reserved Unix names with default"
-    (is (= "file."
+    (is (= "file$"
            (sut/sanitize ".")))
-    (is (= "file.."
+    (is (= "file$$"
            (sut/sanitize ".."))))
 
   (testing "handles invalid trailing chars for Windows"
-    ;; (is (= "name" ; https://msdn.microsoft.com/en-us/library/aa365247(v=vs.85).aspx#naming_conventions
-    ;;        (sut/sanitize "name.")))
-    ;; (is (= "name"
-    ;;        (sut/sanitize "name..")))
+    (is (= "name$"
+           (sut/sanitize "name.")))
+    (is (= "name$$"
+           (sut/sanitize "name..")))
     (is (= "name"
            (sut/sanitize "name "))))
 

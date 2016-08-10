@@ -1,7 +1,11 @@
 (ns sanitize-filename.core
   (:require [clojure.string :as s]))
 
-(def CHARACTER_FILTER #"[\x00-\x1F\/\\:\*\?\"<>\|]")
+;; Resources on valid file names
+;; * https://msdn.microsoft.com/en-us/library/aa365247(v=vs.85).aspx#naming_conventions
+
+(def CHARACTER_FILTER #"[\x00-\x1F\x80-\x9f\/\\:\*\?\"<>\|]")
+(def INVALID_TRAILING_CHARS #"[\. ]+$")
 (def UNICODE_WHITESPACE #"\p{Space}")
 (def WINDOWS_RESERVED_NAMES #{"CON" "PRN" "AUX" "NUL" "COM1" "COM2" "COM3" "COM4" "COM5"
                               "COM6" "COM7" "COM8" "COM9" "LPT1" "LPT2" "LPT3" "LPT4"
@@ -15,7 +19,7 @@
 
 (defn- filter-windows-reserved-names [filename]
   (if (WINDOWS_RESERVED_NAMES (s/upper-case filename))
-    "file"
+    FALLBACK_FILENAME
     filename
     )
   )
@@ -34,11 +38,17 @@
     )
   )
 
+(defn- filter-invalid-trailing-chars [filename]
+  (s/replace filename
+             INVALID_TRAILING_CHARS
+             #(s/join "" (take (count %1) (repeat "$")))))
+
 (defn- -filter [filename]
   (-> filename
       filter-windows-reserved-names
       filter-blank
-      filter-dot)
+      filter-dot
+      filter-invalid-trailing-chars)
   )
 
 (defn- -sanitize [filename]
