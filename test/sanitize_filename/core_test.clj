@@ -40,7 +40,7 @@
            (sut/sanitize "|")))
     (is (= "$"
            (sut/sanitize "\"")))
-    (is (= "file..$file$$.$$"
+    (is (= "..$file$$.$$"
            (sut/sanitize "../file/>.*\"")))
     (is (= "$.pdf"
            (sut/sanitize "<.pdf"))))
@@ -81,9 +81,9 @@
            (sut/sanitize "\ta\n"))))
 
   (testing "extends reserved Unix names with default"
-    (is (= "file."
+    (is (= "file"
            (sut/sanitize ".")))
-    (is (= "file.."
+    (is (= "file"
            (sut/sanitize ".."))))
 
   (testing "handles invalid trailing chars for Windows"
@@ -112,8 +112,8 @@
   (testing "keeps valid names"
     (is (= "valid.mp3"
            (sut/sanitize "valid.mp3")))
-    ;; (is (= ".valid"
-    ;;        (sut/sanitize ".valid")))
+    (is (= ".valid"
+           (sut/sanitize ".valid")))
     (is (= "valid"
            (sut/sanitize "valid")))
     (is (= "LPT10"
