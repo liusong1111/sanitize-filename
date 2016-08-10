@@ -9,11 +9,6 @@
 (def RESERVED_NAMES #"^\.+$")
 (def FALLBACK_FILENAME "file")
 
-(defn- normalize [filename]
-  (-> filename
-      s/trim
-      (s/replace UNICODE_WHITESPACE "")))
-
 (defn- filter-windows-reserved-names [filename]
   (if (WINDOWS_RESERVED_NAMES (s/upper-case filename))
     "file"
@@ -60,12 +55,11 @@
 ;; exported function
 (defn sanitize [filename]
   (-> filename
-      normalize
       -sanitize
       -filter
       truncate)
   )
 
 ;(defn -main []
-;  should print "ab我是c.zip"
+;  should print "$a$b$  我是c.zip"
 ;  (println (sanitize "/a/b/  我是c.zip")))
