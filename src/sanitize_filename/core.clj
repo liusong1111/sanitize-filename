@@ -7,9 +7,7 @@
 (def CHARACTER_FILTER #"[\x00-\x1F\x80-\x9f\/\\:\*\?\"<>\|]")
 (def INVALID_TRAILING_CHARS #"[\. ]+$")
 (def UNICODE_WHITESPACE #"\p{Space}")
-(def WINDOWS_RESERVED_NAMES #{"CON" "PRN" "AUX" "NUL" "COM1" "COM2" "COM3" "COM4" "COM5"
-                              "COM6" "COM7" "COM8" "COM9" "LPT1" "LPT2" "LPT3" "LPT4"
-                              "LPT5" "LPT6" "LPT7" "LPT8" "LPT9"})
+(def WINDOWS_RESERVED_NAMES #"^(?i)(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])(\..*)?$")
 (def FALLBACK_FILENAME "file")
 
 (defn- normalize [filename]
@@ -18,7 +16,7 @@
       (s/replace UNICODE_WHITESPACE "")))
 
 (defn- filter-windows-reserved-names [filename]
-  (if (WINDOWS_RESERVED_NAMES (s/upper-case filename))
+  (if (re-matches WINDOWS_RESERVED_NAMES filename)
     FALLBACK_FILENAME
     filename
     )
