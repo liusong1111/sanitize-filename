@@ -27,6 +27,12 @@ For more details, please refer zaru:
 1. no padding support
 2. replace "/" with "$" instead of ""
 
+## Other implementations
+
+* [zaru](https://github.com/madrobby/zaru) (Ruby)
+* [sanitize](https://github.com/ksze/sanitize) (Python)
+* [owasp-java-fileio](https://github.com/augustd/owasp-java-fileio) (Java)
+* [node-sanitize-filename](https://github.com/augustd/owasp-java-fileio) (JavaScript)
 
 ## License
 
