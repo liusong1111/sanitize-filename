@@ -17,9 +17,10 @@
            (sut/sanitize "AUX")))
     (is (= "file"
            (sut/sanitize "NUL")))
-    ;; (is (= "file" ; https://msdn.microsoft.com/en-us/library/aa365247(v=vs.85).aspx#naming_conventions
-    ;;        (sut/sanitize "NUL.txt")))
-    )
+    (is (= "file"
+           (sut/sanitize "NUL.txt")))
+    (is (= "file"
+           (sut/sanitize "NUL."))))
 
   (testing "replaces invalid characters"
     (is (= "$"
