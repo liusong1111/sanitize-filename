@@ -40,7 +40,7 @@
            (sut/sanitize "|")))
     (is (= "$"
            (sut/sanitize "\"")))
-    (is (= "file..$file$$.$$"
+    (is (= "..$file$$.$$"
            (sut/sanitize "../file/>.*\"")))
     (is (= "$.pdf"
            (sut/sanitize "<.pdf"))))
@@ -54,8 +54,8 @@
            (sut/sanitize "a\u001cb")))
     (is (= "a$b"
            (sut/sanitize "a\u001fb")))
-    (is (= "file"
-           (sut/sanitize "\u001f"))) ; due to str/trim
+    (is (= "$"
+           (sut/sanitize "\u001f")))
     ;; (is (= "$" ; https://en.wikipedia.org/wiki/C0_and_C1_control_codes
     ;;        (sut/sanitize "\u0080")))
     ;; (is (= "$"
@@ -63,27 +63,23 @@
     )
 
   (testing "replaces whitespace"
-    (is (= "ab"
-           (sut/sanitize "a b")))
-    (is (= "ab"
+    (is (= "a$b"
            (sut/sanitize "a\tb")))
-    (is (= "ab"
+    (is (= "a$b"
            (sut/sanitize "a\nb")))
-    (is (= "ab"
+    (is (= "a$b"
            (sut/sanitize "a\fb")))
-    (is (= "ab"
+    (is (= "a$b"
            (sut/sanitize "a\rb")))
-    (is (= "ab"
+    (is (= "a$b"
            (sut/sanitize "a\u000bb")))
-    (is (= "a"
-           (sut/sanitize " a ")))
-    (is (= "a"
+    (is (= "$a$"
            (sut/sanitize "\ta\n"))))
 
   (testing "extends reserved Unix names with default"
-    (is (= "file."
+    (is (= "file"
            (sut/sanitize ".")))
-    (is (= "file.."
+    (is (= "file"
            (sut/sanitize ".."))))
 
   (testing "handles invalid trailing chars for Windows"
@@ -91,8 +87,9 @@
     ;;        (sut/sanitize "name.")))
     ;; (is (= "name"
     ;;        (sut/sanitize "name..")))
-    (is (= "name"
-           (sut/sanitize "name "))))
+    ;; (is (= "name$"
+    ;;        (sut/sanitize "name ")))
+    )
 
   (testing "trims long names"
     (let [name-with-n-chars (fn [n] (str/join "" (take n (repeat "x"))))]
@@ -112,11 +109,13 @@
   (testing "keeps valid names"
     (is (= "valid.mp3"
            (sut/sanitize "valid.mp3")))
-    ;; (is (= ".valid"
-    ;;        (sut/sanitize ".valid")))
+    (is (= ".valid"
+           (sut/sanitize ".valid")))
     (is (= "valid"
            (sut/sanitize "valid")))
     (is (= "LPT10"
            (sut/sanitize "LPT10")))
     (is (= "笊,ざる.pdf"
-           (sut/sanitize "笊,ざる.pdf")))))
+           (sut/sanitize "笊,ざる.pdf")))
+    (is (= " a with spaces"
+           (sut/sanitize " a with spaces")))))

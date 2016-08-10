@@ -6,12 +6,8 @@
 (def WINDOWS_RESERVED_NAMES #{"CON" "PRN" "AUX" "NUL" "COM1" "COM2" "COM3" "COM4" "COM5"
                               "COM6" "COM7" "COM8" "COM9" "LPT1" "LPT2" "LPT3" "LPT4"
                               "LPT5" "LPT6" "LPT7" "LPT8" "LPT9"})
+(def RESERVED_NAMES #"^\.+$")
 (def FALLBACK_FILENAME "file")
-
-(defn- normalize [filename]
-  (-> filename
-      s/trim
-      (s/replace UNICODE_WHITESPACE "")))
 
 (defn- filter-windows-reserved-names [filename]
   (if (WINDOWS_RESERVED_NAMES (s/upper-case filename))
@@ -27,9 +23,9 @@
     )
   )
 
-(defn- filter-dot [filename]
-  (if (.startsWith filename ".")
-    (str FALLBACK_FILENAME filename)
+(defn- filter-reserved-names [filename]
+  (if (re-matches RESERVED_NAMES filename)
+    FALLBACK_FILENAME
     filename
     )
   )
@@ -37,8 +33,9 @@
 (defn- -filter [filename]
   (-> filename
       filter-windows-reserved-names
+      filter-reserved-names
       filter-blank
-      filter-dot)
+      )
   )
 
 (defn- -sanitize [filename]
@@ -58,12 +55,11 @@
 ;; exported function
 (defn sanitize [filename]
   (-> filename
-      normalize
       -sanitize
       -filter
       truncate)
   )
 
 ;(defn -main []
-;  should print "ab我是c.zip"
+;  should print "$a$b$  我是c.zip"
 ;  (println (sanitize "/a/b/  我是c.zip")))
