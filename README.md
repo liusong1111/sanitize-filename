@@ -32,7 +32,7 @@ For more details, please refer zaru:
 * [zaru](https://github.com/madrobby/zaru) (Ruby)
 * [sanitize](https://github.com/ksze/sanitize) (Python)
 * [owasp-java-fileio](https://github.com/augustd/owasp-java-fileio) (Java)
-* [node-sanitize-filename](https://github.com/augustd/owasp-java-fileio) (JavaScript)
+* [node-sanitize-filename](https://github.com/parshap/node-sanitize-filename) (JavaScript)
 
 ## License
 
